@@ -49,3 +49,33 @@ def save_last_ckpt(trainer):
     trainer.save_checkpoint("last.ckpt")
 
 
+if __name__ == '__main__':
+    test_dir = "/kaggle/working/dataa/val"
+    train_dir = "/kaggle/working/dataa/train"
+    
+    # Reading dataset
+    print(":: Reading dataset ..")
+    img_dset = ImageFolder(train_dir)
+    
+    print(":: Classnames: ", img_dset.classes)
+    
+    
+    datamodule = IntelClassificationDataModule(train_data_dir=train_dir, test_data_dir=test_dir,
+                                               batch_size=batch_size,num_workers=4)
+    datamodule.setup()
+    
+    print(":: Datamodule setup completed ..")
+    model = LitResnet(num_classes=datamodule.num_classes, model_name=model_name, optim_name=optimizer_name,
+                      lr=learning_rate)
+        
+    print(":: Training ...")
+    trainer = train(model, datamodule)
+
+    print(":: Saving Model Ckpt")
+    save_last_ckpt(trainer)
+    
+    # set to evaluation model before scripting
+    print(":: Saving Scripted Model")
+    save_model(model)
+
+
