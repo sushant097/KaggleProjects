@@ -14,7 +14,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 
 from model import LitResnet
-from dataset import IntelClassificationDataModule
+from dataset import ClassificationDataModule
 
 
 model_name = "regnetz_c16"
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     print(":: Classnames: ", img_dset.classes)
     
     
-    datamodule = IntelClassificationDataModule(train_data_dir=train_dir, test_data_dir=test_dir,
+    datamodule = ClassificationDataModule(train_data_dir=train_dir, test_data_dir=test_dir,
                                                batch_size=batch_size,num_workers=4)
     datamodule.setup()
     

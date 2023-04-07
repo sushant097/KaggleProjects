@@ -6,6 +6,11 @@ import torchvision
 import pytorch_lightning as pl
 import torchvision.transforms as T
 import torch.nn.functional as F
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sn
+import io
+from PIL import Image
 
 from torchmetrics import F1Score, Precision, Recall, ConfusionMatrix, MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
@@ -123,8 +128,9 @@ class LitResnet(pl.LightningModule):
         sn.set(font_scale=1.2)
         sn.heatmap(df_cm, annot=True, annot_kws={"size": 16}, fmt='d', ax=ax)
         ax.legend(
-            [0, 1, 2, 3, 4, 5],
-            ['buildings', 'forest', 'glacier', 'mountain', 'sea', 'street'],
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            ['safe driving', 'texting - right', 'talking on the phone - right', 'texting - left', 'talking on the phone - left',
+         'operating the radio', 'drinking', 'reaching behind', 'hair and makeup', 'talking to passenger'],
             handler_map={int: IntHandler()},
             loc='upper left',
             bbox_to_anchor=(1.2, 1)

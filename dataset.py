@@ -6,7 +6,7 @@ from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, Dataset
 
 
-class IntelClassificationDataModule(pl.LightningDataModule):
+class ClassificationDataModule(pl.LightningDataModule):
     def __init__(
         self,
         train_data_dir: str = "data/",
