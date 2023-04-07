@@ -34,4 +34,18 @@ def train(model, datamodule):
     
     return trainer
 
+def save_scripted_model(model):
+    script = model.to_torchscript()
+
+    # save for use in production environment
+    torch.jit.save(script,"model.scripted.pt")
+    
+    
+def save_model(model):
+    torch.save(model.state_dict(), "model.pt")
+
+
+def save_last_ckpt(trainer):
+    trainer.save_checkpoint("last.ckpt")
+
 
