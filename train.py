@@ -13,6 +13,10 @@ from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 
+from model import LitResnet
+from dataset import IntelClassificationDataModule
+
+
 model_name = "regnetz_c16"
 optimizer_name = "ADAM"
 learning_rate = 0.000012
@@ -75,7 +79,7 @@ if __name__ == '__main__':
     save_last_ckpt(trainer)
     
     # set to evaluation model before scripting
-    print(":: Saving Scripted Model")
+    print(":: Saving  Model")
     save_model(model)
 
 
