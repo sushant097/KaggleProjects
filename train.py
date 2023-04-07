@@ -18,3 +18,20 @@ optimizer_name = "ADAM"
 learning_rate = 0.000012
 batch_size = 64
 
+
+def train(model, datamodule):
+    tb_logger = pl_loggers.TensorBoardLogger(save_dir="output")
+    early_stop_callback = EarlyStopping(monitor="val/acc", min_delta=0.00, patience=3, verbose=False, mode="max")
+    trainer = pl.Trainer(
+        max_epochs=10,
+        accelerator="auto",
+        callbacks=[early_stop_callback],
+        logger=[tb_logger]
+    )
+    hyperparameters = dict(model_name=model_name, optimizer_name=optimizer_name, learning_rate=learning_rate)
+    trainer.logger.log_hyperparams(hyperparameters)
+    trainer.fit(model, datamodule)
+    
+    return trainer
+
+
