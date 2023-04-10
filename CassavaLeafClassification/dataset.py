@@ -43,9 +43,8 @@ def CassavaDataset(Dataset):
 class ClassificationDataModule(pl.LightningDataModule):
     def __init__(
         self,
-        train_data_dir: str = "data/",
-        test_data_dir: str = "data/",
-        train_csv:str="./tran.csv",
+        images_dir = "",
+        train_csv:str="./train.csv",
         batch_size: int = 256,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -55,11 +54,8 @@ class ClassificationDataModule(pl.LightningDataModule):
         # this line allows to access init params with 'self.hparams' attribute
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=False)
-        
-        self.train_data_dir = train_data_dir
-        self.test_data_dir = test_data_dir
         self.train_csv = train_csv
-        
+        self.images_dir = images_dir
         ######################
         # data transformations
         ######################
@@ -82,8 +78,8 @@ class ClassificationDataModule(pl.LightningDataModule):
                 T.ToTensor(),
                 T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
-        self.data_train: Optional[Dataset] = None
-        self.data_test: Optional[Dataset] = None
+        self.train_dataset: Optional[Dataset] = None
+        self.valid_dataset: Optional[Dataset] = None
 
 
     def prepare_data(self):
@@ -106,8 +102,24 @@ class ClassificationDataModule(pl.LightningDataModule):
         careful not to execute things like random split twice!
         """
         dfx = pd.read_csv("train_folds.csv")
-        train = 
+        train = dfx.loc[dfx['kfold'] != 1]
+        val = dfx.loc[dfx['kfold'] == 1]
+        
+        self.train_dataset = CassavaDataset(
+            train,
+            self.images_dir,
+            train=True,
+            transforms=self.transforms
+        )
 
+        self.valid_dataset = CassavaDataset(
+            val,
+            self.images_dir,
+            train=True,
+            transforms=self.transforms
+        )
+        
+        
     def train_dataloader(self):
         return DataLoader(
             dataset=self.data_train,
@@ -119,22 +131,14 @@ class ClassificationDataModule(pl.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(
-            dataset=self.data_test,
+            dataset=self.valid_dataset,
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,
             shuffle=False,
         )
 
-    def test_dataloader(self):
-        return DataLoader(
-            dataset=self.data_test,
-            batch_size=self.hparams.batch_size,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
-            shuffle=False,
-        )
-
+    
     def teardown(self, stage: Optional[str] = None):
         """Clean up after fit or test."""
         pass
