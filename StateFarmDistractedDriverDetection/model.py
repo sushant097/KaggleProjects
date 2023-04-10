@@ -24,7 +24,7 @@ class IntHandler:
         return text
 
 
-class LitResnet(pl.LightningModule):
+class CassavaLite(pl.LightningModule):
     def __init__(self, num_classes=6, model_name='resnet18', optim_name="SGD", lr=0.05):
         super().__init__()
 

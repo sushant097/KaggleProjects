@@ -13,7 +13,7 @@ from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 
-from model import LitResnet
+from model import CassavaLite
 from dataset import ClassificationDataModule
 
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     print(":: Classnames: ", img_dset.classes)
     
     
-    datamodule = ClassificationDataModule(train_data_dir=train_dir, test_data_dir=test_dir,
+    datamodule = ClassificationDataModule(images_dir="", train_csv="",
                                                batch_size=batch_size,num_workers=4)
     datamodule.setup()
     
