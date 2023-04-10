@@ -9,6 +9,8 @@ State Farm hopes to improve these alarming statistics, and better insure their c
 
 **Kaggle Competition Link: https://www.kaggle.com/competitions/state-farm-distracted-driver-detection**
 
+Here I implemented this with pytorch lightning and timm. Also show how you can add different metrics and confusion matrix in tensorboard. See the code for details.
+
 
 ## Output and Analysis
 
