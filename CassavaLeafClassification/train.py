@@ -54,22 +54,16 @@ def save_last_ckpt(trainer):
 
 
 if __name__ == '__main__':
-    test_dir = "/kaggle/working/dataa/val"
-    train_dir = "/kaggle/working/dataa/train"
+    images_dir = "/kaggle/working/dataa/val"
+    num_classes = 5
+    # Reading dataset    
     
-    # Reading dataset
-    print(":: Reading dataset ..")
-    img_dset = ImageFolder(train_dir)
-    
-    print(":: Classnames: ", img_dset.classes)
-    
-    
-    datamodule = ClassificationDataModule(images_dir="", train_csv="",
-                                               batch_size=batch_size,num_workers=4)
+    datamodule = ClassificationDataModule(images_dir=images_dir, train_csv="",
+                                               batch_size=batch_size,num_workers=2)
     datamodule.setup()
     
     print(":: Datamodule setup completed ..")
-    model = LitResnet(num_classes=datamodule.num_classes, model_name=model_name, optim_name=optimizer_name,
+    model = CassavaLite(num_classes=num_classes, model_name=model_name, optim_name=optimizer_name,
                       lr=learning_rate)
         
     print(":: Training ...")
