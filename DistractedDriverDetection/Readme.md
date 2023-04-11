@@ -1,4 +1,4 @@
-## State Farm Distracted Driver Detection
+## Distracted Driver Detection
 
 ![](https://storage.googleapis.com/kaggle-competitions/kaggle/5048/media/drivers_statefarm.png)
 
