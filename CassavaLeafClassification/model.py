@@ -25,7 +25,7 @@ class IntHandler:
 
 
 class LitResnet(pl.LightningModule):
-    def __init__(self, num_classes=6, model_name='resnet18', optim_name="SGD", lr=0.05):
+    def __init__(self, num_classes=10, model_name='resnet18', optim_name="SGD", lr=0.05):
         super().__init__()
 
         self.num_classes = num_classes

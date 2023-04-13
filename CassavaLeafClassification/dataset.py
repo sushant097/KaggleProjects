@@ -72,8 +72,13 @@ class ClassificationDataModule(pl.LightningDataModule):
             ], 
             p=0.3
         )
-        self.transforms = T.Compose([
+        self.train_transforms = T.Compose([
                 self.transforms1,
+                T.Resize((224, 224)),
+                T.ToTensor(),
+                T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+        self.valid_transforms = T.Compose([
                 T.Resize((224, 224)),
                 T.ToTensor(),
                 T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -109,14 +114,14 @@ class ClassificationDataModule(pl.LightningDataModule):
             train,
             self.images_dir,
             train=True,
-            transforms=self.transforms
+            transforms=self.train_transforms
         )
 
         self.valid_dataset = CassavaDataset(
             val,
             self.images_dir,
             train=True,
-            transforms=self.transforms
+            transforms=self.valid_transforms
         )
         
         
