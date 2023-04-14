@@ -1,3 +1,4 @@
+from typing import Any, Dict, Optional, List
 import timm
 import json
 
@@ -23,8 +24,9 @@ class IntHandler:
         handlebox.add_artist(text)
         return text
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-class LitResnet(pl.LightningModule):
+class CassavaLite(pl.LightningModule):
     def __init__(self, num_classes=10, model_name='resnet18', optim_name="SGD", lr=0.05):
         super().__init__()
 
@@ -118,9 +120,9 @@ class LitResnet(pl.LightningModule):
         # confusion matrix
         df_cm = pd.DataFrame(
             computed_confusion,
-            index=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            columns= ['safe driving', 'texting - right', 'talking on the phone - right', 'texting - left', 'talking on the phone - left',
-         'operating the radio', 'drinking', 'reaching behind', 'hair and makeup', 'talking to passenger']
+            index=[0, 1, 2, 3, 4],
+            columns= ['Cassava Bacterial Blight (CBB)', 'Cassava Brown Streak Disease (CBSD)',
+             'Cassava Green Mottle (CGM)', 'Cassava Mosaic Disease (CMD)', 'Healthy']
         )
 
         fig, ax = plt.subplots(figsize=(10, 5))
@@ -128,9 +130,9 @@ class LitResnet(pl.LightningModule):
         sn.set(font_scale=1.2)
         sn.heatmap(df_cm, annot=True, annot_kws={"size": 16}, fmt='d', ax=ax)
         ax.legend(
-            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            ['safe driving', 'texting - right', 'talking on the phone - right', 'texting - left', 'talking on the phone - left',
-         'operating the radio', 'drinking', 'reaching behind', 'hair and makeup', 'talking to passenger'],
+            [0, 1, 2, 3, 4],
+            ['Cassava Bacterial Blight (CBB)', 'Cassava Brown Streak Disease (CBSD)',
+             'Cassava Green Mottle (CGM)', 'Cassava Mosaic Disease (CMD)', 'Healthy'],
             handler_map={int: IntHandler()},
             loc='upper left',
             bbox_to_anchor=(1.2, 1)

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 import torch
 import pytorch_lightning as pl
@@ -12,8 +12,9 @@ from sklearn.model_selection import StratifiedKFold
 
 
 
-def CassavaDataset(Dataset):
-    def __init(self, df:pd.DataFrame, imfolder:str, train:bool=True, transforms=None):
+class CassavaDataset(Dataset):
+    def __init__(self, df:pd.DataFrame, imfolder:str, train:bool=True, transforms=None):
+        super().__init__()
         self.df = df
         self.imfolder = imfolder
         self.train = train
@@ -25,16 +26,13 @@ def CassavaDataset(Dataset):
         x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
         
         if self.transforms:
-            x = self.transforms(x)['image']
+            x = self.transforms(x)
         
         if self.train:
             y = self.df.iloc[index]['label']
-            return {
-                "x":x,
-                "y":y
-            }
+            return x, y
         else:
-            return {"x": x}
+            return x
     
     def __len__(self):
         return len(self.df)
@@ -73,12 +71,14 @@ class ClassificationDataModule(pl.LightningDataModule):
             p=0.3
         )
         self.train_transforms = T.Compose([
+                T.ToPILImage(),
                 self.transforms1,
                 T.Resize((224, 224)),
                 T.ToTensor(),
                 T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
         self.valid_transforms = T.Compose([
+                T.ToPILImage(),
                 T.Resize((224, 224)),
                 T.ToTensor(),
                 T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -106,19 +106,20 @@ class ClassificationDataModule(pl.LightningDataModule):
         This method is called by lightning with both `trainer.fit()` and `trainer.test()`, so be
         careful not to execute things like random split twice!
         """
+        self.prepare_data()
         dfx = pd.read_csv("train_folds.csv")
-        train = dfx.loc[dfx['kfold'] != 1]
-        val = dfx.loc[dfx['kfold'] == 1]
+        train_data = dfx.loc[dfx['kfold'] != 1]
+        val_data = dfx.loc[dfx['kfold'] == 1]
         
         self.train_dataset = CassavaDataset(
-            train,
+            train_data,
             self.images_dir,
             train=True,
             transforms=self.train_transforms
         )
 
         self.valid_dataset = CassavaDataset(
-            val,
+            val_data,
             self.images_dir,
             train=True,
             transforms=self.valid_transforms
@@ -127,7 +128,7 @@ class ClassificationDataModule(pl.LightningDataModule):
         
     def train_dataloader(self):
         return DataLoader(
-            dataset=self.data_train,
+            dataset=self.train_dataset,
             batch_size=self.hparams.batch_size,
             num_workers=self.hparams.num_workers,
             pin_memory=self.hparams.pin_memory,

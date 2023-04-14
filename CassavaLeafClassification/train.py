@@ -54,7 +54,7 @@ def save_last_ckpt(trainer):
 
 
 if __name__ == '__main__':
-    images_dir = "/kaggle/working/dataa/val"
+    images_dir = "/kaggle/input/cassava-leaf-disease-classification/train_images"
     train_csv = "/kaggle/input/cassava-leaf-disease-classification/train.csv"
     num_classes = 10
     # Reading dataset    
