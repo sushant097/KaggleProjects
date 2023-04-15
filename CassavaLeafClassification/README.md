@@ -9,15 +9,38 @@ Can you identify a problem with a cassava plant using a photo from a relatively 
 
 * `image_id` the image file name.
 
-* `label` the ID code for the disease.
-
-**sample_submission.csv** A properly formatted sample submission, given the disclosed test set content.
-
-* `image_id` the image file name.
-
 * `label` the predicted ID code for the disease.
 
-There are 10 classes of labels: ['safe driving', 'texting - right', 'talking on the phone - right', 'texting - left', 'talking on the phone - left',
-         'operating the radio', 'drinking', 'reaching behind', 'hair and makeup', 'talking to passenger']
+There are 5 classes of labels: ['Cassava Bacterial Blight (CBB)', 'Cassava Brown Streak Disease (CBSD)',
+             'Cassava Green Mottle (CGM)', 'Cassava Mosaic Disease (CMD)', 'Healthy']
 
 
+
+## Output and Analysis
+
+
+### Logs
+
+**Hyperparameters**
+```yaml
+learning_rate: 1.2e-05
+model_name: regnetz_c16
+num_classes: 5
+optimizer_name: ADAM
+```
+**Training**
+![](files/train_acc.png)
+
+Checkout full logs in Tensorboard Dev: https://tensorboard.dev/experiment/rXpGPVwXTgGDoRau1xWXCg
+
+Or Run Tensorboard logs locally as: `tensorboard --logdir="files/outputs"`
+
+**Validation**
+![](files/valid_acc.png)
+
+### Confusion Matrix
+![](files/confusionMatrix.png)
+
+### Confusion Matrix
+
+See the full [notebook](cassavaleafclassification.ipynb) for more details.
